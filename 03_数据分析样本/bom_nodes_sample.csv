@@ -1,0 +1,11 @@
+project_id,bom_version,bom_line_id,parent_bom_line_id,bom_level,node_type,material_code,material_name,alias,quantity_required,unit,parent_module,need_by_time,need_by_timezone,criticality
+EU-A,BOM-V1,BL-ROOT,,0,module,,欧洲项目A交付BOM,,1,project,项目总成,2026-08-25 08:00,Europe/Berlin,high
+EU-A,BOM-V1,BL-MOD-100,BL-ROOT,1,module,,机器人工作站3,,1,module,项目总成,2026-08-20 08:00,Europe/Berlin,high
+EU-A,BOM-V1,BL-MOD-200,BL-ROOT,1,module,,点焊工作站1,,1,module,项目总成,2026-08-22 09:00,Europe/Berlin,medium
+EU-A,BOM-V1,BL-MOD-300,BL-ROOT,1,module,,总装夹具区,,1,module,项目总成,2026-08-16 12:00,Europe/Berlin,medium
+EU-A,BOM-V1,BL-MOD-400,BL-ROOT,1,module,,电气控制系统,,1,module,项目总成,2026-08-17 10:00,Europe/Berlin,high
+EU-A,BOM-V1,BL-1001,BL-MOD-100,2,material,MAT-ECAB-001,电控柜,control cabinet|electrical cabinet,4,set,机器人工作站3,2026-08-20 08:00,Europe/Berlin,high
+EU-A,BOM-V1,BL-1002,BL-MOD-100,2,material,MAT-SERVO-014,伺服驱动器,servo drive,8,pcs,机器人工作站3,2026-08-18 18:00,Europe/Berlin,high
+EU-A,BOM-V1,BL-2001,BL-MOD-200,2,material,MAT-GUN-032,轻量模块化焊枪,welding gun|FlexGun,2,pcs,点焊工作站1,2026-08-22 09:00,Europe/Berlin,medium
+EU-A,BOM-V1,BL-3001,BL-MOD-300,2,material,MAT-BASE-009,机器人底座,robot base,6,pcs,总装夹具区,2026-08-16 12:00,Europe/Berlin,medium
+EU-A,BOM-V1,BL-4001,BL-MOD-400,2,material,MAT-CABLE-120,主控线束,main harness|cable set,12,set,电气控制系统,2026-08-17 10:00,Europe/Berlin,high

@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="BOM交付守门人离线交互原型，展示跨厂区、跨关务、跨海运的BOM行级证据链、干预窗口、飞书AI协同与安全门控。">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <link rel="icon" href="data:,">
+  <title>BOM交付守门人 | 2026 AI先锋未来人才大赛</title>
+  <link rel="stylesheet" href="assets/prototype.css">
+</head>
+<body>
+  <a class="skip-link" href="#mainContent">跳到主要内容</a>
+
+  <header class="topbar" data-load>
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">BOM</div>
+      <div>
+        <h1>BOM交付守门人</h1>
+        <p>按BOM行连接物料事实、证据等级、模块影响与最迟干预窗口</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <label class="sr-only" for="roleSelect">演示角色</label>
+      <select class="select" id="roleSelect" aria-label="演示角色">
+        <option value="customs_owner">关务负责人</option>
+        <option value="project_manager">项目经理</option>
+        <option value="viewer">只读观察员</option>
+      </select>
+      <button class="btn ghost" id="securityButton" type="button">安全与可信</button>
+      <button class="btn primary" id="startDemoButton" type="button">开始闭环演示</button>
+    </div>
+  </header>
+
+  <div class="trust-strip" data-load>
+    <span class="trust-label">真实性边界</span>
+    <span>人工构造模拟数据。当前未连接明珞生产系统、真实飞书租户、企业后端或外部模型；所有写操作均为浏览器内可审计模拟。</span>
+    <span class="trust-time mono">快照 2026-08-09 16:00</span>
+  </div>
+
+  <main id="mainContent">
+    <section class="workspace" aria-label="BOM交付守门人工作台">
+      <aside class="panel" data-load>
+        <div class="panel-header">
+          <h2>项目 / BOM物料</h2>
+          <span class="panel-meta mono" id="materialCount">5 MATERIALS</span>
+        </div>
+        <div class="queue-tools">
+          <label class="sr-only" for="searchInput">搜索物料</label>
+          <input class="input" id="searchInput" type="search" placeholder="搜索物料号、名称或模块">
+          <div class="segments" aria-label="风险筛选">
+            <button class="segment" type="button" data-risk="all" aria-pressed="true">全部</button>
+            <button class="segment" type="button" data-risk="high" aria-pressed="false">高</button>
+            <button class="segment" type="button" data-risk="medium" aria-pressed="false">中</button>
+            <button class="segment" type="button" data-risk="low" aria-pressed="false">低</button>
+          </div>
+        </div>
+        <div class="material-list" id="materialList" aria-live="polite"></div>
+      </aside>
+
+      <div class="stack">
+        <section class="panel content-swap" data-load aria-labelledby="decisionTitle">
+          <div class="decision-head">
+            <div>
+              <h2 id="decisionTitle"><span id="selectedName"></span> / <span id="selectedModule"></span></h2>
+              <p id="selectedCopy"></p>
+            </div>
+            <div class="decision-id mono" id="selectedCode"></div>
+          </div>
+          <div class="decision-grid" id="decisionGrid"></div>
+          <div class="conflict-strip" id="conflictStrip" aria-label="证据数量比较"></div>
+        </section>
+
+        <section class="panel content-swap" data-load>
+          <div class="tabs" role="tablist" aria-label="过程与推演">
+            <button class="tab" id="timelineTab" role="tab" aria-selected="true" aria-controls="timelinePanel" data-tab="timelinePanel">全过程时间线</button>
+            <button class="tab" id="scenarioTab" role="tab" aria-selected="false" aria-controls="scenarioPanel" data-tab="scenarioPanel">基线与延误场景</button>
+            <button class="tab" id="rulesTab" role="tab" aria-selected="false" aria-controls="rulesPanel" data-tab="rulesPanel">规则计算</button>
+          </div>
+          <div class="tab-panel" id="timelinePanel" role="tabpanel" aria-labelledby="timelineTab">
+            <div class="timeline" id="timeline"></div>
+          </div>
+          <div class="tab-panel" id="scenarioPanel" role="tabpanel" aria-labelledby="scenarioTab" hidden>
+            <div id="scenarioContent"></div>
+          </div>
+          <div class="tab-panel" id="rulesPanel" role="tabpanel" aria-labelledby="rulesTab" hidden>
+            <div class="rule-list" id="ruleList"></div>
+          </div>
+        </section>
+      </div>
+
+      <div class="stack right-stack">
+        <section class="panel content-swap" id="riskCard" data-load>
+          <div class="panel-header">
+            <h2>风险与干预窗口</h2>
+            <span class="risk-tag high" id="riskBadge">高风险</span>
+          </div>
+          <div class="risk-summary" id="riskSummary">
+            <div class="risk-summary-top">
+              <div>
+                <div>剩余可行动时间</div>
+                <div class="countdown" id="countdown">18h</div>
+              </div>
+              <span class="status-tag info" id="caseStatus">待处理</span>
+            </div>
+            <div class="deadline" id="deadline"></div>
+          </div>
+          <div class="panel-body">
+            <div class="fact-list" id="riskFacts"></div>
+            <div class="action-bar">
+              <button class="btn danger" id="delayButton" type="button">模拟延误3天</button>
+              <button class="btn primary" id="packageButton" type="button">生成干预包</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel content-swap" data-load>
+          <div class="panel-header">
+            <h2>证据链</h2>
+            <span class="panel-meta mono" id="evidenceCount"></span>
+          </div>
+          <div class="panel-body">
+            <div class="evidence-list" id="evidenceList"></div>
+          </div>
+        </section>
+
+        <section class="panel content-swap" data-load>
+          <div class="panel-header">
+            <h2>飞书AI末端协同</h2>
+            <span class="status-tag simulated">拟接入</span>
+          </div>
+          <div class="panel-body">
+            <div class="feishu-card">
+              <div class="feishu-card-head">BOM风险协同卡片预览</div>
+              <div class="feishu-card-body">
+                <p id="feishuSummary"></p>
+                <div class="feishu-actions">
+                  <button class="btn small" type="button" data-feishu-action="explain">AI解释</button>
+                  <button class="btn small" type="button" data-feishu-action="claim">领取</button>
+                  <button class="btn small" type="button" data-feishu-action="evidence">补充证据</button>
+                  <button class="btn small" type="button" data-feishu-action="close">申请关闭</button>
+                </div>
+                <div class="feishu-note">卡片只提交协同意图。权限、版本、证据和最终落账必须由后端重新校验。</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="panel activity-wrap" aria-labelledby="activityTitle" data-load>
+      <div class="panel-header">
+        <h2 id="activityTitle">案例活动与审计回执</h2>
+        <span class="panel-meta">浏览器演示轨迹，可回查请求、版本、规则与结果</span>
+      </div>
+      <div class="activity-list" id="activityList" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <div class="modal-backdrop" id="workflowBackdrop" role="presentation">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="workflowTitle">
+      <div class="modal-head">
+        <h2 id="workflowTitle">CASE-1001 干预闭环</h2>
+        <button class="icon-button" id="closeWorkflow" type="button" aria-label="关闭干预闭环">×</button>
+      </div>
+      <div class="steps" id="workflowSteps" aria-label="闭环步骤"></div>
+      <div class="workflow-content" id="workflowContent"></div>
+    </section>
+  </div>
+
+  <div class="drawer-backdrop" id="securityBackdrop" role="presentation">
+    <aside class="security-drawer" role="dialog" aria-modal="true" aria-labelledby="securityTitle">
+      <div class="drawer-head">
+        <h2 id="securityTitle">安全与可信实验台</h2>
+        <button class="icon-button" id="closeSecurity" type="button" aria-label="关闭安全与可信实验台">×</button>
+      </div>
+      <div class="drawer-section">
+        <h3>安全控制状态</h3>
+        <p>当前仅验证前端安全呈现和后端控制契约。真实试点仍需官方SDK验签、服务端授权、数据库唯一约束和不可覆盖对象存储。</p>
+        <div class="security-actions">
+          <button class="btn" type="button" data-security-mode="invalid_signature">签名错误</button>
+          <button class="btn" type="button" data-security-mode="expired_event">过期回调</button>
+          <button class="btn" type="button" data-security-mode="duplicate_event">重复事件</button>
+          <button class="btn" type="button" data-security-mode="stale_case">旧版本冲突</button>
+          <button class="btn" type="button" data-security-mode="forbidden_actor">无权限角色</button>
+          <button class="btn" type="button" data-security-mode="untrusted_content">不可信文档指令</button>
+        </div>
+        <pre class="security-output mono" id="securityOutput" aria-live="polite">选择一个固定测试向量，查看请求在哪一道门被阻断。</pre>
+      </div>
+      <div class="drawer-section">
+        <h3>生产试点必须补齐</h3>
+        <div class="fact-list">
+          <div class="fact-row"><span class="fact-label">飞书回调</span><span class="fact-value">官方SDK、原始字节验签解密、事件时间窗、租户归属</span></div>
+          <div class="fact-row"><span class="fact-label">业务授权</span><span class="fact-value">租户、项目、对象、动作四层服务端校验</span></div>
+          <div class="fact-row"><span class="fact-label">证据保管</span><span class="fact-value">恶意文件扫描、真实SHA-256、对象版本、更正链、访问审计</span></div>
+          <div class="fact-row"><span class="fact-label">故障恢复</span><span class="fact-value">收件箱去重、出站箱、死信队列、对账与备份恢复演练</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="assets/gsap.min.js" defer></script>
+  <script src="assets/prototype-core.js" defer></script>
+  <script src="assets/prototype-data.js" defer></script>
+  <script src="assets/prototype-app.js" defer></script>
+</body>
+</html>
